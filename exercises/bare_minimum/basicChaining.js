@@ -12,13 +12,15 @@ var fs = require('fs');
 var Promise = require('bluebird');
 var funcs = require('./promisification');
 
-var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
+var fetchProfileAndWriteToFile = function (readFilePath, writeFilePath) {
   // TODO
-  // funcs.getGitHubProfileAsync
-  console.log('this is readFilePath', readFilePath);
-  console.log('this is writeFilePath', writeFilePath);
-  //make api call to github
-  //get username
+  var content = fs.readFileSync(readFilePath);
+  var user = content.toString().split('\n')[0];
+  return funcs.getGitHubProfileAsync(user)
+    .then((data) => {
+      var stringProfile = JSON.stringify(data);
+      fs.writeFileSync(writeFilePath, stringProfile);
+    });
 
 };
 
